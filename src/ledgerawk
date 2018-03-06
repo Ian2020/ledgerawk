@@ -1,0 +1,14 @@
+#!/bin/env bash
+# Use process redirection here to provide a file to awk from a cmd
+# We just need to copy our two separate scripts into here somehow to build this
+# Remember we need to do this per institution
+#
+# Something like...
+usbank = "##SUBS##"
+santander= "##SUBS##"
+
+if $1 == usbank
+  use usbank
+fi
+
+awk 'BEGIN { print "subs" }' <(awk '{ $usbank }' <(xsel))
