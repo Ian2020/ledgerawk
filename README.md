@@ -36,6 +36,9 @@ Tesco   Assets:HSBC:Current:Food  Expenses:Food
 ### To Do
 
 * The order is backwards!
+  * I think we need an interim step where we convert whatever to a format:
+    `dateSEPdescriptionSEPamount`
+    ...so we can sort properly.
 * We still got spaces on the end of amounts
 * Allow comments in .ledgerimport
 * See the todos in the script files
