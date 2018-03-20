@@ -29,6 +29,9 @@ e.g.
 0001  2020/06/20  Disneyland  -$400
 ```
 
+The order field is the last line number of each transaction from the input file.
+This allows us to reverse the order of transactions if needed for ledger.
+
 ## Desired Usage
 
 Copy transactions from browser into clipboard. Then at the terminal:
