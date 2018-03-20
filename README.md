@@ -55,7 +55,7 @@ Tesco   Assets:HSBC:Current:Food  Expenses:Food
 
 ### To Do
 
-* We still got spaces on the end of amounts
+* Put newlines between transactions
 * Allow comments in .ledgerimport
 * See the todos in the script files
 * Make clipboard work

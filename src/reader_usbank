@@ -26,6 +26,7 @@ BEGIN {
       } else {
         amount = $4
       }
+      gsub(" ", "", amount) # Trim out all the whitespace
       # TODO: Pick a safer separator for output?
       # TODO: Ensure width of first field is always big enough
       printf("%.4d\t%s\t%s\t%s\n", NR, date, desc, amount);
