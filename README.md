@@ -1,16 +1,33 @@
 # README
 
-## Usage
+## Current Usage
 
 Everything is in src dir in anticipation of building one final script for the whole
-thing.
+thing. Here's the scripts in the order to run them:
 
-* ledgerimport: convert copied transactions to ledger format. You need to
+* reader\_\*: first stage of converting to our intermediate format.
+* At this stage you may need to sort with `sort -gr` to do a reverse numberic
+  sort on the intermediate format. This gets transactions in a most-recent last
+  order as ledger needs.
+* ledgerimport: convert intermediate format to ledger format. You need to
   provide a filename or STDIN, though I've not worked out how to paste into
   STDIN correctly.
 * postings.sh: Update the transaction postings from previous step with regex
   expressions in .ledgerimport.
-* ledgerawk: My unfinished attempt at the final script.
+* ledgerawk: My unfinished attempt at the final script that brings it all
+  together.
+
+## Intermediate Format
+
+```
+ORDER[TAB]DATE[TAB]DESCRIPTION[AMOUNT]
+```
+
+e.g.
+
+```
+0001  2020/06/20  Disneyland  -$400
+```
 
 ## Desired Usage
 
@@ -35,16 +52,11 @@ Tesco   Assets:HSBC:Current:Food  Expenses:Food
 
 ### To Do
 
-* The order is backwards!
-  * I think we need an interim step where we convert whatever to a format:
-    `dateSEPdescriptionSEPamount`
-    ...so we can sort properly.
 * We still got spaces on the end of amounts
 * Allow comments in .ledgerimport
 * See the todos in the script files
 * Make clipboard work
-* Make it work as above! Just one command instead of ledgerimport and
-  postings.sh
+* Make it work as above! Just one command
 * Add a whole bunch of test cases
 * Allow optional institution in .ledgerimport file if we want to keep regex
   scoped that way (maybe wait till we have a need for this)

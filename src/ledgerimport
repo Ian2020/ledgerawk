@@ -1,39 +1,12 @@
 #!/bin/awk -f
-# TODO: Cope with US Bank transactions for checks - they have an extra field for the check number
 BEGIN {
   FS="\t"
 }
 {
-  if (!inTrans) {
-    inTrans=1
-    # Guard
-    if(!match($0,"^\t?[0-9][0-9]")) {
-      print "Expected a date, got \"" $0 "\""
-      exit 1
-    }
-    FS="[/ \t]"
-    $0=$0
-    if($1!="") {
-      date = $3 "/" $1 "/" $2
-    } else {
-      date = $4 "/" $2 "/" $3
-    }
-    FS="\t"
-  } else {
-    # We need to watch for the end of desc and start of transactions
-    if(match($8, "^\\$")) {
-      sub("^ ", "", desc)
-      print date " * " desc
-      if (match($6, "^\\$")) {
-        print "    @@@    -" $6
-      } else {
-        print "    @@@    " $4
-      }
-      print "    @@@"
-      desc = ""
-      inTrans = 0
-    } else {
-      desc = desc " " $0
-    }
-  }
+  date = $2
+  desc = $3
+  amount = $4
+  print date " * " desc
+  print "    @@@    " amount
+  print "    @@@"
 }
