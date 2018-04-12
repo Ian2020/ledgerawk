@@ -3,15 +3,17 @@
 ## Current Usage
 
 Everything is in src dir in anticipation of building one final script for the whole
-thing. Here's the scripts in the order to run them:
+thing. Below are the scripts in the order to run them. Each script can work from
+STDIN or a filename as they are all awk scripts at the moment. However I would
+avoid using STDIN as pasting hard tabs in here-documents [is
+tricky](https://stackoverflow.com/questions/3731513/how-do-you-type-a-tab-in-a-bash-here-document)
+and they are used in the file formats.
 
 * reader\_\*: first stage of converting to our intermediate format.
 * At this stage you may need to sort with `sort -gr` to do a reverse numberic
   sort on the intermediate format. This gets transactions in a most-recent last
   order as ledger needs.
-* ledgerimport: convert intermediate format to ledger format. You need to
-  provide a filename or STDIN, though I've not worked out how to paste into
-  STDIN correctly.
+* ledgerimport: convert intermediate format to ledger format.
 * postings.sh: Update the transaction postings from previous step with regex
   expressions in .ledgerimport.
 * ledgerawk: My unfinished attempt at the final script that brings it all
@@ -55,9 +57,9 @@ Tesco   Assets:HSBC:Current:Food  Expenses:Food
 
 ### To Do
 
-* Put newlines between transactions
+* Move .ledgerimport to ghar
 * Allow comments in .ledgerimport
-* See the todos in the script files
+* See the todos in the script files, use red-green-refactor to fix them!
 * Make clipboard work
 * Make it work as above! Just one command
 * Add a whole bunch of test cases

@@ -9,4 +9,5 @@ BEGIN {
   print date " * " desc
   print "    @@@    " amount
   print "    @@@"
+  print ""
 }

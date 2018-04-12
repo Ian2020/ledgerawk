@@ -23,12 +23,18 @@ BEGIN {
     } 
   }
   if(matched != -1) {
+    # TODO: There is an assumption here about how many lines are in a entry
     print $0
     getline
     print "    " firstposting[matched] "    " $2
     getline
     print "    " secondposting[matched]
+    getline
+    print
   } else {
+    # TODO: There is an assumption here about how many lines are in a entry
+    print
+    getline
     print
     getline
     print
