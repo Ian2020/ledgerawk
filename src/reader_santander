@@ -5,7 +5,12 @@ BEGIN {
 {
   date = $1
   desc = $2
-  amount =$3
+  # Check which field has an amount in it, one is credit, one is debit
+  if(match($3, "^£")) { # A dollar sign in the 8th field
+    amount = $3
+  } else {
+    amount = "-" $4
+  }
 
   # Convert date
   FS="[/ ]"
