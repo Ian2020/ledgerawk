@@ -48,17 +48,17 @@ The results will be put back on the clipboard for pasting into your ledger files
 ### Auto-populate Postings
 
 You can teach ledgerimport to automatically fill in postings. It will look for a
-file `.ledgerimport` in the present directory. Format is:
+file `.ledgerimport` in your home directory. Format is:
 
 ```
-REGEX   POSTING1                  POSTING2
-Tesco   Assets:HSBC:Current:Food  Expenses:Food
+# Comment line
+# Line format: REGEX¬POSTING1¬POSTING2
+# Example:
+Tesco¬Assets:HSBC:Current:Food¬Expenses:Food
 ```
 
 ### To Do
 
-* Move .ledgerimport to ghar
-* Allow comments in .ledgerimport
 * See the todos in the script files, use red-green-refactor to fix them!
 * Make clipboard work
 * Make it work as above! Just one command
