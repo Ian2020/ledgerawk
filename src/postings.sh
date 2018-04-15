@@ -5,10 +5,12 @@ BEGIN {
   FS="¬"
   SETTINGS_FILE=ENVIRON["HOME"] "/.ledgerimport"
   while(getline < SETTINGS_FILE) {
-    substitutions[a]=$1
-    firstposting[a]=$2
-    secondposting[a]=$3
-    a++
+    if(!match($0,"^#")) {
+      substitutions[a]=$1
+      firstposting[a]=$2
+      secondposting[a]=$3
+      a++
+    }
   }
   FS=SAVED_FS
 }
