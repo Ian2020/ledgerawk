@@ -1,14 +1,14 @@
 #!/bin/env bash
-# Use process redirection here to provide a file to awk from a cmd
-# We just need to copy our two separate scripts into here somehow to build this
-# Remember we need to do this per institution
 #
-# Something like...
-usbank = "##SUBS##"
-santander= "##SUBS##"
+# Usage: $0 [institution] FILE
+#
+# Available institutions:
+#   santander
+#   usbank
+# 
+# FILE should be the copied transactions from your bank.
 
-if $1 == usbank
-  use usbank
-fi
-
-awk 'BEGIN { print "subs" }' <(awk '{ $usbank }' <(xsel))
+./reader_santander $2 > ~/Desktop/${1}2.txt &&
+cat ~/Desktop/${1}2.txt | sort -gr > ~/Desktop/${1}3.txt &&
+./ledgerimport ~/Desktop/${1}3.txt > ~/Desktop/${1}4.txt &&
+./postings.sh ~/Desktop/${1}4.txt > ~/Desktop/${1}5.txt
