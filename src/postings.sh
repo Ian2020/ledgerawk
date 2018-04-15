@@ -3,7 +3,8 @@ BEGIN {
   # TODO: Can we use a better separator? Just picked something unlikely to appear in regex
   SAVED_FS=FS
   FS="¬"
-  while(getline < ".ledgerimport") {
+  SETTINGS_FILE=ENVIRON["HOME"] "/.ledgerimport"
+  while(getline < SETTINGS_FILE) {
     substitutions[a]=$1
     firstposting[a]=$2
     secondposting[a]=$3

@@ -1,0 +1,18 @@
+#!/bin/awk -f
+BEGIN {
+  FS="\t"
+}
+{
+  date = $1
+  desc = $2
+  amount =$3
+
+  # Convert date
+  FS="[/ ]"
+  $0=$0
+  date = $3 "/" $2 "/" $1
+  gsub("[ \t]", "", date) # Trim out all the whitespace
+  FS="\t"
+
+  printf("%.4d\t%s\t%s\t%s\n", NR, date, desc, amount);
+}
