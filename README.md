@@ -59,6 +59,7 @@ Tesco¬Assets:HSBC:Current:Food¬Expenses:Food
 
 ### To Do
 
+* reader_santander is leaving spaces on the end of some lines
 * See the todos in the script files, use red-green-refactor to fix them!
 * Make clipboard work
 * Make it work as above! Just one command

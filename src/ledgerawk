@@ -8,7 +8,8 @@
 # 
 # FILE should be the copied transactions from your bank.
 
-./reader_santander $2 > ~/Desktop/${1}2.txt &&
+# TODO: Check institution supplied is valid
+./reader_${1} $2 > ~/Desktop/${1}2.txt &&
 cat ~/Desktop/${1}2.txt | sort -gr > ~/Desktop/${1}3.txt &&
 ./ledgerimport ~/Desktop/${1}3.txt > ~/Desktop/${1}4.txt &&
 ./postings.sh ~/Desktop/${1}4.txt > ~/Desktop/${1}5.txt

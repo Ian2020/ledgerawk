@@ -1,0 +1,34 @@
+#!/bin/awk -f
+BEGIN {
+  FS="\t"
+}
+{
+  transaction_date = $1
+  effective_date = $4
+  desc = $2
+  amount = $5
+
+  # Sort out the sign of amount
+  if(match(amount, " CR")) {
+    gsub(" CR", "", amount)  
+    amount = "£" amount
+  } else {
+    amount = "-£" amount
+  }
+
+  # Do some trimming
+  gsub("^ +", "", desc)
+  gsub(" +$", "", desc)
+  gsub("^ +", "", transaction_date)
+  gsub(" +$", "", transaction_date)
+  gsub("^ +", "", effective_date)
+  gsub(" +$", "", effective_date)
+
+  # TODO: Sometimes these dates don't translate?
+  "date -d \"" transaction_date "\" +%Y/%m/%d" | getline transaction_date_formatted
+  "date -d \"" effective_date   "\" +%Y/%m/%d" | getline effective_date_formatted
+
+  date = transaction_date_formatted "=" effective_date_formatted
+
+  printf("%.4d\t%s\t%s\t%s\n", NR, date, desc, amount);
+}
