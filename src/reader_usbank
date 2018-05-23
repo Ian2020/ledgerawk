@@ -18,13 +18,26 @@ BEGIN {
     FS="\t"
   } else {
     # We need to watch for the end of desc and start of transactions
-    if(match($8, "^\\$")) { # A dollar sign in the 8th field
-      sub("^ ", "", desc)
-      # Work out if credit or debit
-      if (match($6, "^\\$")) {
-        amount = "-" $6
+    # At the moment we use the num fields to indicate this which might not be robust
+    if(NF > 6) {
+      # Num fields may be 7 or 8 on the final line
+      # Checking accounts have an extra field ("check #")
+      if(NF == 8) {
+        deposit = $4
+        withdrawal = $6
       } else {
-        amount = $4
+        deposit = $3
+        withdrawal = $5
+      }
+
+      # Tidy up description
+      sub("^ ", "", desc)
+
+      # Work out if credit or debit
+      if (match(withdrawal, "^\\$")) {
+        amount = "-" withdrawal
+      } else {
+        amount = deposit
       }
       gsub(" ", "", amount) # Trim out all the whitespace
       # TODO: Pick a safer separator for output?
