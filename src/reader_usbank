@@ -6,8 +6,8 @@ BEGIN {
 {
   if (!inTrans) {
     inTrans=1
-    # Guard
-    if(!match($0,"^ ?\t?[0-9][0-9]")) {
+    # Guard - this may not be sufficient
+    if(!match($0,"^ *[0-9][0-9]")) {
       print "Expected a date, got \"" $0 "\""
       exit 1
     }
@@ -19,19 +19,24 @@ BEGIN {
   } else {
     # We need to watch for the end of desc and start of transactions
     # At the moment we use the num fields to indicate this which might not be robust
-    if(NF > 6) {
-      # Num fields may be 7 or 8 on the final line
-      # Checking accounts have an extra field ("check #")
-      if(NF == 8) {
-        deposit = $4
-        withdrawal = $6
+    if(NF > 1) {
+      # Checks may have an extra field ("check #")
+      # Number of fields helps us decide if its a deposit or withdrawal
+      if(NF == 3) {
+        deposit = $2
+        withdrawal = $1
+      } else if (NF ==5) {
+        deposit = $1
+        withdrawal = $3
       } else {
-        deposit = $3
-        withdrawal = $5
+        print "Unexpected number of fields at end of transaction on line num " NR ". Aborting."
+        exit 1
       }
 
-      # Tidy up description
+      # Tidy up fields
       sub("^ ", "", desc)
+      gsub(" ", "", deposit) # Trim out all the whitespace
+      gsub(" ", "", withdrawal) # Trim out all the whitespace
 
       # Work out if credit or debit
       if (match(withdrawal, "^\\$")) {
@@ -46,10 +51,16 @@ BEGIN {
 
       # Reset for next transaction
       desc = ""
+      descLines = 0
       inTrans = 0
     } else {
       # We just found another line of the description, add it on
       desc = desc " " $0
+      descLines++
+      if(descLines > 3) {
+        print "Suspicous number of lines in description on line num " NR ", suspect we have missed the end of a transaction somehow. Aborting."
+        exit 1
+      }
     }
   }
 }
