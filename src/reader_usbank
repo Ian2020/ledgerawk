@@ -29,6 +29,7 @@ BEGIN {
         withdrawal = $6
       } else {
         print "Unexpected number of fields (" NF ") at end of transaction on line num " NR ". Aborting."
+        print $0
         exit 1
       }
 
