@@ -27,6 +27,10 @@ BEGIN {
       if (NF == 8) {
         deposit = $4
         withdrawal = $6
+      } else if (NF == 7) {
+        # Savings account transactions lack the 'check #' field
+        deposit = $3
+        withdrawal = $5
       } else {
         print "Unexpected number of fields (" NF ") at end of transaction on line num " NR ". Aborting."
         print $0
