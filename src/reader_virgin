@@ -11,8 +11,10 @@ BEGIN {
   # Sort out the sign of amount
   if(debit) {
     amount = debit
+    gsub("^- £", "£-", amount)
   } else {
     amount = credit
+    gsub("^+ £", "£", amount)
   }
 
   # Do some trimming
