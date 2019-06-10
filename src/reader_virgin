@@ -1,0 +1,28 @@
+#!/bin/awk -f
+BEGIN {
+  FS="\t"
+}
+{
+  transaction_date = $1
+  desc = $2
+  debit = $3
+  credit = $4
+
+  # Sort out the sign of amount
+  if(debit) {
+    amount = debit
+  } else {
+    amount = credit
+  }
+
+  # Do some trimming
+  gsub("^ +", "", desc)
+  gsub(" +$", "", desc)
+  gsub("^ +", "", transaction_date)
+  gsub(" +$", "", transaction_date)
+
+  # Convert date by hand, horrendous escaping here
+  "echo \"" transaction_date "\" | sed \"s/\\(..\\)\\/\\(..\\)\\/\\(....\\)/\\3\\/\\2\\/\\1/\"" | getline transaction_date_formatted
+
+  printf("%.4d\t%s\t%s\t%s\n", NR, transaction_date_formatted, desc, amount);
+}
