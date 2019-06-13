@@ -12,9 +12,10 @@ BEGIN {
   while(getline < SETTINGS_FILE) {
     # Allow comments
     if(!match($0,"^#")) {
-      substitutions[a]=$1
-      firstposting[a]=$2
-      secondposting[a]=$3
+      filenames[a]=$1
+      substitutions[a]=$2
+      firstposting[a]=$3
+      secondposting[a]=$4
       a++
     }
   }
@@ -28,7 +29,7 @@ BEGIN {
     # the date and transaction status symbol. Is there a way to say $3: to mean
     # concat field 3 and all following fields?
     # Check the substitution is not intended to match a tag, i.e. ':TAG:'
-    if((!match(substitutions[i], "^:.*:$")) && match($0,substitutions[i])) {
+    if((!match(substitutions[i], "^:.*:$")) && match(FILENAME, filenames[i]) && match($0,substitutions[i])) {
       matched=i
       # Remember that we're now looking for @@@ the first
       find_first_posting = 1
@@ -41,7 +42,7 @@ BEGIN {
   # Comment - match against substitutions, remember which index matched if so
   # Check the substitution is intended to match a tag, i.e. ':TAG:'
   for(i in substitutions) {
-    if(match(substitutions[i], "^:.*:$") && match($0,substitutions[i])) {
+    if(match(substitutions[i], "^:.*:$") && match(FILENAME, filenames[i]) && match($0,substitutions[i])) {
       matched=i
       # Remember that we're now looking for @@@ the first
       find_first_posting = 1

@@ -77,7 +77,7 @@ EOF
     Expenses:IKEA
 EOF
   )
-  create_settingsfile "IKEA¬Assets:IKEA¬Expenses:IKEA"
+  create_settingsfile "$TEST_FILE¬IKEA¬Assets:IKEA¬Expenses:IKEA"
 
   execute_postings "$TEST_CASE"
 
@@ -99,7 +99,23 @@ EOF
     Expenses:IKEA
 EOF
   )
-  create_settingsfile "IKEA¬Assets:IKEA¬Expenses:IKEA"
+  create_settingsfile "$TEST_FILE¬IKEA¬Assets:IKEA¬Expenses:IKEA"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
+
+@test "Single transaction, matched but not for this filename" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; Comment
+    @@@    -£16.60 
+    @@@
+EOF
+  )
+  TEST_EXP=$TEST_CASE
+  create_settingsfile "NONMATCHING_FILENAME¬IKEA¬Assets:IKEA¬Expenses:IKEA"
 
   execute_postings "$TEST_CASE"
 
@@ -146,7 +162,7 @@ EOF
     @@@
 EOF
   )
-  create_settingsfile "IKEA¬Assets:IKEA¬Expenses:IKEA"
+  create_settingsfile "$TEST_FILE¬IKEA¬Assets:IKEA¬Expenses:IKEA"
 
   execute_postings "$TEST_CASE"
 
@@ -174,7 +190,7 @@ EOF
     Expenses:Tesco
 EOF
   )
-  create_settingsfile "IKEA¬Assets:IKEA¬Expenses:IKEA\nTESCO¬Assets:Tesco¬Expenses:Tesco"
+  create_settingsfile "$TEST_FILE¬IKEA¬Assets:IKEA¬Expenses:IKEA\n$TEST_FILE¬TESCO¬Assets:Tesco¬Expenses:Tesco"
 
   execute_postings "$TEST_CASE"
 
@@ -216,7 +232,23 @@ EOF
     Expenses:IKEA
 EOF
   )
-  create_settingsfile ":TAG:¬Assets:IKEA¬Expenses:IKEA"
+  create_settingsfile "$TEST_FILE¬:TAG:¬Assets:IKEA¬Expenses:IKEA"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
+
+@test "Single tagged transaction, matches but not for this filename" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; :TAG:
+    @@@    -£16.60 
+    @@@
+EOF
+  )
+  TEST_EXP="$TEST_CASE"
+  create_settingsfile "NONMATCHING_FILENAME¬:TAG:¬Assets:IKEA¬Expenses:IKEA"
 
   execute_postings "$TEST_CASE"
 
@@ -238,7 +270,7 @@ EOF
     @@@
 EOF
   )
-  create_settingsfile ":IKEA:¬Assets:IKEA¬Expenses:IKEA"
+  create_settingsfile "$TEST_FILE¬:IKEA:¬Assets:IKEA¬Expenses:IKEA"
 
   execute_postings "$TEST_CASE"
 
@@ -260,7 +292,7 @@ EOF
     @@@
 EOF
   )
-  create_settingsfile "TAG¬Assets:IKEA¬Expenses:IKEA"
+  create_settingsfile "$TEST_FILE¬TAG¬Assets:IKEA¬Expenses:IKEA"
 
   execute_postings "$TEST_CASE"
 
