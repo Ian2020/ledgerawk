@@ -86,3 +86,59 @@ EOF
 
   test_expectations
 }
+
+@test "Multiple transactions, one matches" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    @@@    -£16.60 
+    @@@
+
+2019/05/24 * CARD PAYMENT TO TESCO PFS 3876,39.52 GBP, RATE 1.00/GBP ON 22-05-2019 
+    @@@    -£39.52 
+    @@@
+EOF
+  )
+  TEST_EXP=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    Assets:IKEA    -£16.60
+    Expenses:IKEA
+
+2019/05/24 * CARD PAYMENT TO TESCO PFS 3876,39.52 GBP, RATE 1.00/GBP ON 22-05-2019 
+    @@@    -£39.52 
+    @@@
+EOF
+  )
+  create_settingsfile "IKEA¬Assets:IKEA¬Expenses:IKEA"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
+
+@test "Multiple transactions, all match" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    @@@    -£16.60 
+    @@@
+
+2019/05/24 * CARD PAYMENT TO TESCO PFS 3876,39.52 GBP, RATE 1.00/GBP ON 22-05-2019 
+    @@@    -£39.52 
+    @@@
+EOF
+  )
+  TEST_EXP=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    Assets:IKEA    -£16.60
+    Expenses:IKEA
+
+2019/05/24 * CARD PAYMENT TO TESCO PFS 3876,39.52 GBP, RATE 1.00/GBP ON 22-05-2019 
+    Assets:Tesco    -£39.52
+    Expenses:Tesco
+EOF
+  )
+  create_settingsfile "IKEA¬Assets:IKEA¬Expenses:IKEA\nTESCO¬Assets:Tesco¬Expenses:Tesco"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
