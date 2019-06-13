@@ -15,7 +15,7 @@ and they are used in the file formats.
   order as ledger needs.
 * ledgerimport: convert intermediate format to ledger format.
 * postings.sh: Update the transaction postings from previous step with regex
-  expressions in .ledgerimport.
+  expressions in a .ledgerimport settings file, more on this below.
 * ledgerawk: My unfinished attempt at the final script that brings it all
   together.
 
@@ -48,7 +48,7 @@ The results will be put back on the clipboard for pasting into your ledger files
 ### Auto-populate Postings
 
 You can teach ledgerimport to automatically fill in postings. It will look for a
-file `.ledgerimport` in your home directory. Format is:
+file `.ledgerimport` in the current dir and then in your home directory. Format is:
 
 ```
 # Comment line
