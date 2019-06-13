@@ -22,7 +22,12 @@ BEGIN {
   FS=SAVED_FS
 }
 /^[[:digit:]]{4}/ {
+  #We must rest our state on each new transaction, so previously matched things don't bleed out
+  find_first_posting=0
+  find_second_posting=0
+
   print
+  
   # Transaction description - match against substitutions, remember which index matched if so
   for(i in substitutions) {
     # TODO: We'd rather match against field 3 and onwards here, so we do not include

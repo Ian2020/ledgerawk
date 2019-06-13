@@ -298,3 +298,26 @@ EOF
 
   test_expectations
 }
+
+#
+# Matched things shouldn't bleed beyond the transaction that matched
+#
+
+@test "Multiple transactions, first matches but already filled so match is cancelled." {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    A    -£16.60 
+    B
+
+2019/05/24 * CARD PAYMENT TO TESCO PFS 3876,39.52 GBP, RATE 1.00/GBP ON 22-05-2019 
+    @@@    -£39.52 
+    @@@
+EOF
+  )
+  TEST_EXP=$TEST_CASE
+  create_settingsfile "$TEST_FILE¬IKEA¬Assets:IKEA¬Expenses:IKEA"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
