@@ -27,12 +27,12 @@ directory. Format is:
 
 ```
 # Comment line
-# Line format: REGEX¬POSTING1¬POSTING2
+# Line format: FILE¬TRANSACTION¬POSTING1¬POSTING2
 # Example:
-IKEA¬Assets:IKEA¬Expenses:IKEA
+bank.ldg¬IKEA¬Assets:IKEA¬Expenses:IKEA
 ```
 
-Given a transaction like so:
+Given a transaction like so in a file bank.ldg:
 
 ```
 2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
@@ -40,7 +40,7 @@ Given a transaction like so:
     @@@
 ```
 
-It will attempt to match the REGEX against the transaction description and if so
+It will attempt to match the TRANSACTION regex against the transaction description and if so
 replace the first and second occurences of '@@@' with POSTING1 and POSTING2
 respectively:
 
@@ -51,11 +51,11 @@ respectively:
 ```
 
 You can also search comments for tags and replace postings the same way. Just
-indicate this by surrounding your regex with colons. So if you have the
+indicate this by surrounding your TRANSACTION regex with colons. So if you have the
 following in your .ledgerimport file:
 
 ```
-:IKEA:¬Assets:IKEA¬Expenses:IKEA
+bank.ldg¬:IKEA:¬Assets:IKEA¬Expenses:IKEA
 ```
 
 And a transaction such as:
@@ -77,6 +77,9 @@ The output will be:
 
 Transaction description matching takes priority and across both the first entry
 to match will win.
+
+The FILE regex is there so you can limit the application of matching to the
+correct ledger file, in case you have multiple to deal with.
 
 ## Implementation Details
 
