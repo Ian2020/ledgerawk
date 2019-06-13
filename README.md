@@ -33,7 +33,7 @@ Tesco¬Assets:HSBC:Current:Food¬Expenses:Food
 
 ## Implementation Details
 
-These details 
+These details mostly for developers use and debugging rather than end-users.
 
 ### Intermediate Format
 
