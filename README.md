@@ -21,15 +21,62 @@ and they are used in the file formats.
 
 ### Auto-populate Postings
 
-You can teach ledgerimport to automatically fill in postings. It will look for a
-file `.ledgerimport` in the current dir and then in your home directory. Format is:
+You can teach postings.sh to automatically fill in postings. It will look for a
+file `.ledgerimport` first in the current dir and if not found then in your home
+directory. Format is:
 
 ```
 # Comment line
 # Line format: REGEX¬POSTING1¬POSTING2
 # Example:
-Tesco¬Assets:HSBC:Current:Food¬Expenses:Food
+IKEA¬Assets:IKEA¬Expenses:IKEA
 ```
+
+Given a transaction like so:
+
+```
+2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    @@@    -£16.60 
+    @@@
+```
+
+It will attempt to match the REGEX against the transaction description and if so
+replace the first and second occurences of '@@@' with POSTING1 and POSTING2
+respectively:
+
+```
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    Assets:IKEA    -£16.60
+    Expenses:IKEA
+```
+
+You can also search comments for tags and replace postings the same way. Just
+indicate this by surrounding your regex with colons. So if you have the
+following in your .ledgerimport file:
+
+```
+:IKEA:¬Assets:IKEA¬Expenses:IKEA
+```
+
+And a transaction such as:
+
+```
+2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; Let's tag this :IKEA:
+    @@@    -£16.60 
+    @@@
+```
+
+The output will be:
+
+```
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    Assets:IKEA    -£16.60
+    Expenses:IKEA
+```
+
+Transaction description matching takes priority and across both the first entry
+to match will win.
 
 ## Implementation Details
 

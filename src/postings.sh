@@ -10,6 +10,7 @@ BEGIN {
     SETTINGS_FILE=ENVIRON["HOME"] "/.ledgerimport"
 }
   while(getline < SETTINGS_FILE) {
+    # Allow comments
     if(!match($0,"^#")) {
       substitutions[a]=$1
       firstposting[a]=$2
@@ -21,12 +22,26 @@ BEGIN {
 }
 /^[[:digit:]]{4}/ {
   print
-  # Match against substitutions, remember which index matched if so
+  # Transaction description - match against substitutions, remember which index matched if so
   for(i in substitutions) {
     # TODO: We'd rather match against field 3 and onwards here, so we do not include
     # the date and transaction status symbol. Is there a way to say $3: to mean
     # concat field 3 and all following fields?
-    if(match($0,substitutions[i])) {
+    # Check the substitution is not intended to match a tag, i.e. ':TAG:'
+    if((!match(substitutions[i], "^:.*:$")) && match($0,substitutions[i])) {
+      matched=i
+      # Remember that we're now looking for @@@ the first
+      find_first_posting = 1
+      # TODO: break
+    } 
+  }
+}
+/^ *;/ {
+  print
+  # Comment - match against substitutions, remember which index matched if so
+  # Check the substitution is intended to match a tag, i.e. ':TAG:'
+  for(i in substitutions) {
+    if(match(substitutions[i], "^:.*:$") && match($0,substitutions[i])) {
       matched=i
       # Remember that we're now looking for @@@ the first
       find_first_posting = 1
@@ -49,6 +64,6 @@ BEGIN {
   }
 }
 # This is nasty - as "AWK Patterns" are cumulative we must here match any lines not matched by patterns above to avoid repetition
-$0 !~ /(^[[:digit:]]{4}|^    @@@)/ {
+$0 !~ /(^[[:digit:]]{4}|^    @@@|^ *;)/ {
   print
 }

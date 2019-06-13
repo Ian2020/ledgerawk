@@ -180,3 +180,89 @@ EOF
 
   test_expectations
 }
+
+#
+# TAGS
+#
+
+@test "Single tagged transaction, no matches" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; :TAG:
+    @@@    -£16.60 
+    @@@
+EOF
+  )
+  TEST_EXP="$TEST_CASE"
+  empty_settingsfile
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
+
+@test "Single tagged transaction, matches" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; :TAG:
+    @@@    -£16.60 
+    @@@
+EOF
+  )
+  TEST_EXP=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; :TAG:
+    Assets:IKEA    -£16.60
+    Expenses:IKEA
+EOF
+  )
+  create_settingsfile ":TAG:¬Assets:IKEA¬Expenses:IKEA"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
+
+@test "Single tagged transaction, regex for tag not matched with transaction description" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO :IKEA: LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; :TAG:
+    @@@    -£16.60 
+    @@@
+EOF
+  )
+  TEST_EXP=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO :IKEA: LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; :TAG:
+    @@@    -£16.60 
+    @@@
+EOF
+  )
+  create_settingsfile ":IKEA:¬Assets:IKEA¬Expenses:IKEA"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
+
+@test "Single tagged transaction, regex for transaction description not matched with transaction tag" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; :TAG:
+    @@@    -£16.60 
+    @@@
+EOF
+  )
+  TEST_EXP=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    ; :TAG:
+    @@@    -£16.60 
+    @@@
+EOF
+  )
+  create_settingsfile "TAG¬Assets:IKEA¬Expenses:IKEA"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
