@@ -19,7 +19,23 @@ and they are used in the file formats.
 * ledgerawk: My unfinished attempt at the final script that brings it all
   together.
 
-## Intermediate Format
+### Auto-populate Postings
+
+You can teach ledgerimport to automatically fill in postings. It will look for a
+file `.ledgerimport` in the current dir and then in your home directory. Format is:
+
+```
+# Comment line
+# Line format: REGEX¬POSTING1¬POSTING2
+# Example:
+Tesco¬Assets:HSBC:Current:Food¬Expenses:Food
+```
+
+## Implementation Details
+
+These details 
+
+### Intermediate Format
 
 ```
 ORDER[TAB]DATE[TAB]DESCRIPTION[AMOUNT]
@@ -34,7 +50,11 @@ e.g.
 The order field is the last line number of each transaction from the input file.
 This allows us to reverse the order of transactions if needed for ledger.
 
-## Desired Usage
+## Development
+
+Don't forget to run the tests: `make test`. They require [bats](https://github.com/sstephenson/bats).
+
+### Desired Usage
 
 Copy transactions from browser into clipboard. Then at the terminal:
 
@@ -44,18 +64,6 @@ ledgerimport [INSTITUTION]
 
 It will read from the clipboard and parse the data for the given institution.
 The results will be put back on the clipboard for pasting into your ledger files.
-
-### Auto-populate Postings
-
-You can teach ledgerimport to automatically fill in postings. It will look for a
-file `.ledgerimport` in the current dir and then in your home directory. Format is:
-
-```
-# Comment line
-# Line format: REGEX¬POSTING1¬POSTING2
-# Example:
-Tesco¬Assets:HSBC:Current:Food¬Expenses:Food
-```
 
 ### To Do
 

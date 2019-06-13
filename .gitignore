@@ -1,2 +1,2 @@
-# Ignore any personal/testing configs
-.ledgerimport
+# Ignore makefile's temp files
+.test
