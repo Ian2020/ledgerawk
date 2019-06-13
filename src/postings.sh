@@ -19,36 +19,36 @@ BEGIN {
   }
   FS=SAVED_FS
 }
-{
-  matched=-1
+/^[[:digit:]]{4}/ {
+  print
+  # Match against substitutions, remember which index matched if so
   for(i in substitutions) {
     # TODO: We'd rather match against field 3 and onwards here, so we do not include
     # the date and transaction status symbol. Is there a way to say $3: to mean
     # concat field 3 and all following fields?
     if(match($0,substitutions[i])) {
       matched=i
+      # Remember that we're now looking for @@@ the first
+      find_first_posting = 1
       # TODO: break
     } 
   }
-  if(matched != -1) {
-    # TODO: There is an assumption here about how many lines are in a entry
-    print $0
-    getline
+}
+/^    @@@/ {
+  # if we're looking for the first, now look for second
+  if(find_first_posting) {
+    find_first_posting=0
+    find_second_posting=1
     print "    " firstposting[matched] "    " $2
-    getline
+  } else if (find_second_posting) {
+    find_second_posting=0
     print "    " secondposting[matched]
-    if(getline) {
-      print
-    }
   } else {
-    # TODO: There is an assumption here about how many lines are in a entry
+    # We're not looking so passthrough input
     print
-    getline
-    print
-    getline
-    print
-    if (getline) {
-      print
-    }
   }
+}
+# This is nasty - as "AWK Patterns" are cumulative we must here match any lines not matched by patterns above to avoid repetition
+$0 !~ /(^[[:digit:]]{4}|^    @@@)/ {
+  print
 }
