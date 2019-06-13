@@ -28,6 +28,11 @@ function execute_postings() {
   rm $SETTINGS_FILE
 }
 
+function test_expectations() {
+  [ "$status" -eq 0 ]
+  [ "$output" = "$TEST_EXP" ]
+}
+
 @test "Single transaction, no matches" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
@@ -36,12 +41,11 @@ function execute_postings() {
 EOF
   )
   TEST_EXP="$TEST_CASE"
-
   empty_settingsfile
+
   execute_postings "$TEST_CASE"
 
-  [ "$status" -eq 0 ]
-  [ "$output" = "$TEST_EXP" ]
+  test_expectations
 }
 
 @test "Single transaction, matched" {
@@ -57,12 +61,11 @@ EOF
     Expenses:IKEA
 EOF
   )
-
   create_settingsfile "IKEA¬Assets:IKEA¬Expenses:IKEA"
-  execute_postings "$TEST_EXP"
 
-  [ "$status" -eq 0 ]
-  [ "$output" = "$TEST_EXP" ]
+  execute_postings "$TEST_CASE"
+
+  test_expectations
 }
 
 @test "Multiple transactions, no matches" {
@@ -77,10 +80,9 @@ EOF
 EOF
   )
   TEST_EXP="$TEST_CASE"
-
   empty_settingsfile
+
   execute_postings "$TEST_CASE"
 
-  [ "$status" -eq 0 ]
-  [ "$output" = "$TEST_EXP" ]
+  test_expectations
 }
