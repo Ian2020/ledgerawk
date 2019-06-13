@@ -75,8 +75,8 @@ The output will be:
     Expenses:IKEA
 ```
 
-Transaction description matching takes priority and across both the first entry
-to match will win.
+Tag matching takes priority over transaction description and across both the
+first entry in the ledgerimport settings file to match will win.
 
 The FILE regex is there so you can limit the application of matching to the
 correct ledger file, in case you have multiple to deal with.
