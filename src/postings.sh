@@ -37,8 +37,9 @@ BEGIN {
     print "    " firstposting[matched] "    " $2
     getline
     print "    " secondposting[matched]
-    getline
-    print
+    if(getline) {
+      print
+    }
   } else {
     # TODO: There is an assumption here about how many lines are in a entry
     print
@@ -46,7 +47,8 @@ BEGIN {
     print
     getline
     print
-    getline
-    print
+    if (getline) {
+      print
+    }
   }
 }
