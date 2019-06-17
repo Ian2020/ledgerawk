@@ -10,9 +10,10 @@
 
 # TODO: Check institution supplied is valid
 TMP="$(mktemp -d -t)/"
+FILENAME=$(basename "$2")
 echo "Results will be in $TMP"
-./reader_"${1}" "$2" > "$TMP${1}2.txt" &&
-sort -gr < "$TMP${1}2.txt" > "$TMP${1}3.txt" &&
-./ledgerimport "$TMP/${1}3.txt" > "$TMP${1}4.txt" &&
-./postings.sh "$TMP/${1}4.txt" > "$TMP${1}5.txt"
-$EDITOR "$TMP${1}5.txt"
+./reader_"${1}" "$2" > "$TMP${FILENAME}_intermediate.txt" &&
+sort -gr < "$TMP${FILENAME}_intermediate.txt" > "$TMP${FILENAME}_intermediate_sorted.txt" &&
+./ledgerimport "$TMP${FILENAME}_intermediate_sorted.txt" > "$TMP${FILENAME}" &&
+./postings.sh "$TMP${FILENAME}" > "${TMP}import_${FILENAME}"
+$EDITOR "${TMP}import_${FILENAME}"
