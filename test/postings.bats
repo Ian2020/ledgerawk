@@ -84,6 +84,26 @@ EOF
   test_expectations
 }
 
+@test "Single transaction space between currency, matched" {
+  TEST_CASE=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    @@@    -£ 16.60 
+    @@@
+EOF
+  )
+  TEST_EXP=$(cat << EOF
+2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+    Assets:IKEA    -£ 16.60
+    Expenses:IKEA
+EOF
+  )
+  create_settingsfile "$TEST_FILE¬IKEA¬Assets:IKEA¬Expenses:IKEA"
+
+  execute_postings "$TEST_CASE"
+
+  test_expectations
+}
+
 @test "Single commented transaction, matched" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 

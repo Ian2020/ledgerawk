@@ -60,7 +60,12 @@ BEGIN {
   if(find_first_posting) {
     find_first_posting=0
     find_second_posting=1
-    print "    " firstposting[matched] "    " $2
+    # Sometimes there can be an extra field if the amount has whitespace in it, e.g. "£ 16"
+    if ($3 != "") {
+      print "    " firstposting[matched] "    " $2 " " $3
+    } else {
+      print "    " firstposting[matched] "    " $2 $3
+    }
   } else if (find_second_posting) {
     find_second_posting=0
     print "    " secondposting[matched]
