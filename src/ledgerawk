@@ -11,9 +11,9 @@
 # TODO: Check institution supplied is valid
 TMP="$(mktemp -d -t)/"
 FILENAME=$(basename "$2")
-echo "Results will be in $TMP"
+echo "Results will be in $TMP" >&2
 ./reader_"${1}" "$2" > "$TMP${FILENAME}_intermediate.txt" &&
 sort -gr < "$TMP${FILENAME}_intermediate.txt" > "$TMP${FILENAME}_intermediate_sorted.txt" &&
 ./ledgerimport "$TMP${FILENAME}_intermediate_sorted.txt" > "$TMP${FILENAME}" &&
 ./postings.sh "$TMP${FILENAME}" > "${TMP}import_${FILENAME}"
-$EDITOR "${TMP}import_${FILENAME}"
+cat "${TMP}import_${FILENAME}"
