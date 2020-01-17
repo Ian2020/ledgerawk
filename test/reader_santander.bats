@@ -26,7 +26,7 @@ function test_expectations() {
 
 @test "reader_santander: one transaction" {
   IFS='' test_input="17/01/2020 	CARD PAYMENT TO SAINSBURYS PETROL,45.43 GBP, RATE 1.00/GBP ON 15-01-2020 		£45.43 	£54,084.23 "
-  IFS='' test_exp="0001	2020/01/17	CARD PAYMENT TO SAINSBURYS PETROL,45.43 GBP, RATE 1.00/GBP ON 15-01-2020 	-£45.43 "
+  IFS='' test_exp="0001	2020/01/17	CARD PAYMENT TO SAINSBURYS PETROL,45.43 GBP, RATE 1.00/GBP ON 15-01-2020	-£45.43"
   execute_reader $test_input $test_exp
 
   test_expectations $test_exp

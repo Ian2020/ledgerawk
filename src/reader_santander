@@ -12,6 +12,10 @@ BEGIN {
     amount = "-" $4
   }
 
+  # Trim spaces at start or end
+  gsub("(^ +| +$)", "", amount)
+  gsub("(^ +| +$)", "", desc)
+
   # Convert date
   FS="[/ ]"
   $0=$0
