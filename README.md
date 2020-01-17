@@ -117,8 +117,7 @@ The results will be put back on the clipboard for pasting into your ledger files
 
 ### To Do
 
-* Allow santander to deal with advertising msgs
-* reader_santander is leaving spaces on the end of some lines
+* Turn it into one script, installed in the system
 * Make clipboard work
 * See the todos in the script files, use red-green-refactor to fix them!
 * Make it work as above! Just one command
