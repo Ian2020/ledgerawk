@@ -33,7 +33,7 @@ function test_expectations() {
   [ "$output" = "$TEST_EXP" ]
 }
 
-@test "Single transaction, no matches" {
+@test "postings: single transaction, no matches" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     @@@    -£16.60 
@@ -48,7 +48,7 @@ EOF
   test_expectations
 }
 
-@test "Single commented transaction, no matches" {
+@test "postings: single commented transaction, no matches" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     ; Here's a comment
@@ -64,7 +64,7 @@ EOF
   test_expectations
 }
 
-@test "Single transaction, matched" {
+@test "postings: single transaction, matched" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     @@@    -£16.60 
@@ -84,7 +84,7 @@ EOF
   test_expectations
 }
 
-@test "Single transaction space between currency, matched" {
+@test "postings: single transaction space between currency, matched" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     @@@    -£ 16.60 
@@ -104,7 +104,7 @@ EOF
   test_expectations
 }
 
-@test "Single commented transaction, matched" {
+@test "postings: single commented transaction, matched" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     ; Comment
@@ -126,7 +126,7 @@ EOF
   test_expectations
 }
 
-@test "Single transaction, matched but not for this filename" {
+@test "postings: single transaction, matched but not for this filename" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     ; Comment
@@ -142,7 +142,7 @@ EOF
   test_expectations
 }
 
-@test "Multiple transactions, no matches" {
+@test "postings: multiple transactions, no matches" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     @@@    -£16.60 
@@ -161,7 +161,7 @@ EOF
   test_expectations
 }
 
-@test "Multiple transactions, one matches" {
+@test "postings: multiple transactions, one matches" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     @@@    -£16.60 
@@ -189,7 +189,7 @@ EOF
   test_expectations
 }
 
-@test "Multiple transactions, all match" {
+@test "postings: multiple transactions, all match" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     @@@    -£16.60 
@@ -221,7 +221,7 @@ EOF
 # TAGS
 #
 
-@test "Single tagged transaction, no matches" {
+@test "postings: single tagged transaction, no matches" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     ; :TAG:
@@ -237,7 +237,7 @@ EOF
   test_expectations
 }
 
-@test "Single tagged transaction, matches" {
+@test "postings: single tagged transaction, matches" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     ; :TAG:
@@ -259,7 +259,7 @@ EOF
   test_expectations
 }
 
-@test "Single tagged transaction, matches but not for this filename" {
+@test "postings: single tagged transaction, matches but not for this filename" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     ; :TAG:
@@ -275,7 +275,7 @@ EOF
   test_expectations
 }
 
-@test "Single tagged transaction, regex for tag not matched with transaction description" {
+@test "postings: single tagged transaction, regex for tag not matched with transaction description" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO :IKEA: LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     ; :TAG:
@@ -297,7 +297,7 @@ EOF
   test_expectations
 }
 
-@test "Single tagged transaction, regex for transaction description not matched with transaction tag" {
+@test "postings: single tagged transaction, regex for transaction description not matched with transaction tag" {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     ; :TAG:
@@ -323,7 +323,7 @@ EOF
 # Matched things shouldn't bleed beyond the transaction that matched
 #
 
-@test "Multiple transactions, first matches but already filled so match is cancelled." {
+@test "postings: multiple transactions, first matches but already filled so match is cancelled." {
   TEST_CASE=$(cat << EOF
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     A    -£16.60 

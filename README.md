@@ -117,9 +117,10 @@ The results will be put back on the clipboard for pasting into your ledger files
 
 ### To Do
 
+* Allow santander to deal with advertising msgs
 * reader_santander is leaving spaces on the end of some lines
-* See the todos in the script files, use red-green-refactor to fix them!
 * Make clipboard work
+* See the todos in the script files, use red-green-refactor to fix them!
 * Make it work as above! Just one command
 * Add a whole bunch of test cases
 * Allow optional institution in .ledgerimport file if we want to keep regex
