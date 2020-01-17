@@ -3,6 +3,11 @@ BEGIN {
   FS="\t"
 }
 {
+  if (NF < 4) {
+    # Advertising, ignore this line
+    next
+  }
+
   date = $1
   desc = $2
   # Check which field has an amount in it, one is credit, one is debit
