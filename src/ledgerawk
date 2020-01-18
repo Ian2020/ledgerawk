@@ -4,9 +4,11 @@ usage() {
   echo "Usage:"
   echo "  $0 [flags]"
   echo
-  echo "Flags:"
+  echo "Mandatory flags:"
   echo " -i     input file: transactions copied from your bank"
   echo " -r     reader: the type of reader to use; can be 'santander', 'usbank', 'virgin'"
+  echo "Optional flags:"
+  echo " -o     output file: transactions will be appended here"
   exit 1
 }
 
@@ -22,14 +24,22 @@ translate() {
   sort -gr < "$TMP${FILENAME}_intermediate.txt" > "$TMP${FILENAME}_intermediate_sorted.txt" &&
   ./ledgerimport "$TMP${FILENAME}_intermediate_sorted.txt" > "$TMP${FILENAME}" &&
   ./postings.sh "$TMP${FILENAME}" > "${TMP}import_${FILENAME}"
-  cat "${TMP}import_${FILENAME}"
+
+  if [[ -v OUTPUT_FILE ]]; then
+    cat "${TMP}import_${FILENAME}" >> "$OUTPUT_FILE"
+  else
+    cat "${TMP}import_${FILENAME}"
+  fi
 }
 
 action="translate"
 
 # Handle args, skip the first one as it's the institution
-while getopts "i:r:" opt; do
+while getopts "i:r:o:" opt; do
   case $opt in
+    o)
+      OUTPUT_FILE="$OPTARG"
+      ;;
     i)
       INPUT_FILE="$OPTARG"
       ;;

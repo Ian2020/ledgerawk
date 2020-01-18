@@ -118,10 +118,6 @@ The results will be put back on the clipboard for pasting into your ledger files
 ### Roadmap
 
 * Better usage:
-  * Make the input file an option, if it's not present we error on our default action
-  * Make the reader an option, again if it's not present when we attempt our action
-  * Add option to take a destination filename to which we will append, otherwise
-    STDOUT
   * Add an option to run postings against a file from main script
     * If output file is same as input, use sponge or intermediate file
     * Our default action should be to translate transactions, posting is an option
