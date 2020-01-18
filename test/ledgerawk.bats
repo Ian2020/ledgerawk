@@ -7,7 +7,7 @@ TEST_FILE=test_file.ldg
   pushd src
   echo -e $test_input > $TEST_FILE
 
-  run ./ledgerawk santander $TEST_FILE
+  run ./ledgerawk -r santander -i $TEST_FILE
   rm $TEST_FILE
   popd
 

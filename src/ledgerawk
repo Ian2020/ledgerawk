@@ -1,19 +1,49 @@
 #!/bin/env bash
-#
-# Usage: $0 [institution] FILE
-#
-# Available institutions:
-#   santander
-#   usbank
-# 
-# FILE should be the copied transactions from your bank.
 
-# TODO: Check institution supplied is valid
-TMP="$(mktemp -d -t)/"
-FILENAME=$(basename "$2")
-echo "Results will be in $TMP" >&2
-./reader_"${1}" "$2" > "$TMP${FILENAME}_intermediate.txt" &&
-sort -gr < "$TMP${FILENAME}_intermediate.txt" > "$TMP${FILENAME}_intermediate_sorted.txt" &&
-./ledgerimport "$TMP${FILENAME}_intermediate_sorted.txt" > "$TMP${FILENAME}" &&
-./postings.sh "$TMP${FILENAME}" > "${TMP}import_${FILENAME}"
-cat "${TMP}import_${FILENAME}"
+usage() {
+  echo "Usage:"
+  echo "  $0 [flags]"
+  echo
+  echo "Flags:"
+  echo " -i     input file: transactions copied from your bank"
+  echo " -r     reader: the type of reader to use; can be 'santander', 'usbank', 'virgin'"
+  exit 1
+}
+
+translate() {
+  [[ ! -v READER ]] && usage
+  [[ ! -v INPUT_FILE ]] && usage
+
+  # TODO: Check institution supplied is valid
+  TMP="$(mktemp -d -t)/"
+  FILENAME=$(basename "$INPUT_FILE")
+  echo "Results will be in $TMP" >&2
+  ./reader_"${READER}" "$INPUT_FILE" > "$TMP${FILENAME}_intermediate.txt" &&
+  sort -gr < "$TMP${FILENAME}_intermediate.txt" > "$TMP${FILENAME}_intermediate_sorted.txt" &&
+  ./ledgerimport "$TMP${FILENAME}_intermediate_sorted.txt" > "$TMP${FILENAME}" &&
+  ./postings.sh "$TMP${FILENAME}" > "${TMP}import_${FILENAME}"
+  cat "${TMP}import_${FILENAME}"
+}
+
+action="translate"
+
+# Handle args, skip the first one as it's the institution
+while getopts "i:r:" opt; do
+  case $opt in
+    i)
+      INPUT_FILE="$OPTARG"
+      ;;
+    r)
+      READER="$OPTARG"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
+case $action in
+  translate)
+    translate
+    ;;
+esac
