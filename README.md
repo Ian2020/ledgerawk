@@ -115,12 +115,34 @@ ledgerimport [INSTITUTION]
 It will read from the clipboard and parse the data for the given institution.
 The results will be put back on the clipboard for pasting into your ledger files.
 
-### To Do
+### Roadmap
 
-* Turn it into one script, installed in the system
-* Make clipboard work
+* Better usage:
+  * Choose a BASH method for these cmdline options we need...
+  * Make the input file an option, if it's not present we error on our default action
+  * Make the reader an option, again if it's not present when we attempt our action
+  * Add option to take a destination filename to which we will append, otherwise
+    STDOUT
+  * Add an option to run postings against a file from main script
+    * If output file is same as input, use sponge or intermediate file
+    * Our default action should be to translate transactions, posting is an option
+  * Add option to take input from clipboard (X)
+* More into config, less to specify on the cmdline:
+  * In a new config take labels for mappings of reader_type to ledger file:
+    `label: reader_type destination_ledger_file`
+  * Allow specifying label on cmdline to shortcut output file and reader options
+    * When we run postings cmd default input should also be the ledger file,
+      unless on cmdline
+* Easier to invoke:
+  * Switch to ninja for build
+  * Pick a better name that would survive in actual Fedora repos
+  * Identify correct path to install our subsidiary scripts to
+  * Install it system-wide when we build, make sure its still testable in parts
+    too
+
+Other bits:
+
 * See the todos in the script files, use red-green-refactor to fix them!
-* Make it work as above! Just one command
 * Add a whole bunch of test cases
 * Allow optional institution in .ledgerimport file if we want to keep regex
-  scoped that way (maybe wait till we have a need for this)
+  scoped globally (maybe wait till we have a need for this)
