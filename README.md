@@ -118,7 +118,7 @@ The results will be put back on the clipboard for pasting into your ledger files
 ### Roadmap
 
 * Better usage:
-  * Add an option to run postings against a file from main script
+  * Add an option to not run translation against a file (i.e. just do postings)
     * If output file is same as input, use sponge or intermediate file
     * Our default action should be to translate transactions, posting is an option
   * Add option to take input from clipboard (X)
