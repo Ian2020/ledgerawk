@@ -9,12 +9,13 @@ usage() {
   echo " -r     reader: the type of reader to use; can be 'santander', 'usbank', 'virgin'"
   echo "Optional flags:"
   echo " -o     output file: transactions will be appended here"
+  echo " -v     be verbose"
   exit 1
 }
 
 
 # Handle args, skip the first one as it's the institution
-while getopts "i:r:o:" opt; do
+while getopts "i:r:o:v" opt; do
   case $opt in
     o)
       OUTPUT_FILE="$OPTARG"
@@ -24,6 +25,9 @@ while getopts "i:r:o:" opt; do
       ;;
     r)
       READER="$OPTARG"
+      ;;
+    v)
+      VERBOSE="$OPTARG"
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -40,7 +44,8 @@ script_path=$(dirname "$0")
 # TODO: Check institution supplied is valid
 TMP="$(mktemp -d -t)/"
 FILENAME=$(basename "$INPUT_FILE")
-echo "Results will be in $TMP" >&2
+[[ -v VERBOSE ]] && echo "Intermediate results will be in $TMP" >&2
+
 "$script_path"/reader_"${READER}" "$INPUT_FILE" > "$TMP${FILENAME}_intermediate.txt" &&
 sort -gr < "$TMP${FILENAME}_intermediate.txt" > "$TMP${FILENAME}_intermediate_sorted.txt" &&
 "$script_path"/ledgerimport "$TMP${FILENAME}_intermediate_sorted.txt" > "$TMP${FILENAME}" &&
