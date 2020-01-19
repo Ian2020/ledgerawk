@@ -25,7 +25,7 @@ You can teach postings.sh to automatically fill in postings. It will look for a
 file `.ledgerimport` first in the current dir and if not found then in your home
 directory. Format is:
 
-```
+```text
 # Comment line
 # Line format: FILE¬TRANSACTION¬POSTING1¬POSTING2
 # Example:
@@ -34,17 +34,17 @@ bank.ldg¬IKEA¬Assets:IKEA¬Expenses:IKEA
 
 Given a transaction like so in a file bank.ldg:
 
-```
-2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
-    @@@    -£16.60 
+```text
+2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019
+    @@@    -£16.60
     @@@
 ```
 
-It will attempt to match the TRANSACTION regex against the transaction description and if so
-replace the first and second occurences of '@@@' with POSTING1 and POSTING2
-respectively:
+It will attempt to match the TRANSACTION regex against the transaction
+description and if so replace the first and second occurences of '@@@' with
+POSTING1 and POSTING2 respectively:
 
-```
+```text
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     Assets:IKEA    -£16.60
     Expenses:IKEA
@@ -54,22 +54,22 @@ You can also search comments for tags and replace postings the same way. Just
 indicate this by surrounding your TRANSACTION regex with colons. So if you have the
 following in your .ledgerimport file:
 
-```
+```text
 bank.ldg¬:IKEA:¬Assets:IKEA¬Expenses:IKEA
 ```
 
 And a transaction such as:
 
-```
-2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
+```text
+2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019
     ; Let's tag this :IKEA:
-    @@@    -£16.60 
+    @@@    -£16.60
     @@@
 ```
 
 The output will be:
 
-```
+```text
 2019/05/24 * CARD PAYMENT TO IKEA LTD 264 BRISTOL IKEA,16.60 GBP, RATE 1.00/GBP ON 22-05-2019 
     Assets:IKEA    -£16.60
     Expenses:IKEA
@@ -87,13 +87,13 @@ These details mostly for developers use and debugging rather than end-users.
 
 ### Intermediate Format
 
-```
+```text
 ORDER[TAB]DATE[TAB]DESCRIPTION[AMOUNT]
 ```
 
 e.g.
 
-```
+```text
 0001  2020/06/20  Disneyland  -$400
 ```
 
@@ -108,7 +108,7 @@ Don't forget to run the tests: `make test`. They require [bats](https://github.c
 
 Copy transactions from browser into clipboard. Then at the terminal:
 
-```
+```bash
 ledgerimport [INSTITUTION]
 ```
 
@@ -137,6 +137,7 @@ The results will be put back on the clipboard for pasting into your ledger files
 
 Other bits:
 
+* Have a verbose mode that controls output of the temporary dir and info
 * See the todos in the script files, use red-green-refactor to fix them!
 * Add a whole bunch of test cases
 * Allow optional institution in .ledgerimport file if we want to keep regex
