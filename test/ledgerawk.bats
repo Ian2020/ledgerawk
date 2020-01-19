@@ -39,3 +39,19 @@ SCRIPT_PATH=src/ledgerawk
   [ -s $OUTPUT_FILE ]
   rm -f $OUTPUT_FILE
 }
+
+@test "ledgerawk: suppress translation, just do postings" {
+  IFS='' test_input="\
+2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019
+    ; Let's tag this :IKEA:
+    @@@    -£16.60
+    @@@"
+  echo -e $test_input > $TEST_FILE
+
+  run $SCRIPT_PATH -r santander -i $TEST_FILE -n
+  rm $TEST_FILE
+
+  [ "$status" -eq 0 ]
+  [ "${#lines[@]}" -eq 4 ]
+  [ "${lines[0]}" = "2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019" ]
+}

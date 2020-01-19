@@ -118,9 +118,6 @@ The results will be put back on the clipboard for pasting into your ledger files
 ### Roadmap
 
 * Better usage:
-  * Add an option to not run translation against a file (i.e. just do postings)
-    * If output file is same as input, use sponge or intermediate file
-    * Our default action should be to translate transactions, posting is an option
   * Add option to take input from clipboard (X)
 * More into config, less to specify on the cmdline:
   * In a new config take labels for mappings of reader_type to ledger file:
@@ -137,7 +134,6 @@ The results will be put back on the clipboard for pasting into your ledger files
 
 Other bits:
 
-* Have a verbose mode that controls output of the temporary dir and info
 * See the todos in the script files, use red-green-refactor to fix them!
 * Add a whole bunch of test cases
 * Allow optional institution in .ledgerimport file if we want to keep regex
