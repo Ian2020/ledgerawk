@@ -8,6 +8,7 @@ usage() {
   echo " -i     input file: transactions copied from your bank"
   echo " -r     reader: the type of reader to use; can be 'santander', 'usbank', 'virgin'"
   echo "Optional flags:"
+  echo " -c     take input from clipboard: can be 'primary', 'secondary' or 'clipboard'"
   echo " -n     do not translate the input file - assume input is ledger format already"
   echo " -o     output file: transactions will be appended here"
   echo " -v     be verbose"
@@ -16,7 +17,7 @@ usage() {
 
 
 # Handle args, skip the first one as it's the institution
-while getopts "i:r:o:vn" opt; do
+while getopts "i:r:o:vnc:" opt; do
   case $opt in
     o)
       OUTPUT_FILE="$OPTARG"
@@ -33,6 +34,9 @@ while getopts "i:r:o:vn" opt; do
     v)
       VERBOSE="$OPTARG"
       ;;
+    c)
+      CLIPBOARD="$OPTARG"
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       ;;
@@ -40,15 +44,25 @@ while getopts "i:r:o:vn" opt; do
 done
 
 [[ ! -v READER ]] && usage
-[[ ! -v INPUT_FILE ]] && usage
+[[ ! -v INPUT_FILE ]] && [[ ! -v CLIPBOARD ]] && usage
 
 # Select path
 script_path=$(dirname "$0")
 
 # TODO: Check institution supplied is valid
 TMP="$(mktemp -d -t)/"
-FILENAME=$(basename "$INPUT_FILE")
 [[ -v VERBOSE ]] && echo "Intermediate results will be in $TMP" >&2
+
+if [[ -v INPUT_FILE ]]; then
+  FILENAME=$(basename "$INPUT_FILE")
+else
+  FILENAME=dummy
+  INPUT_FILE="${TMP}input"
+fi
+
+if [[ -v CLIPBOARD ]]; then
+  xclip -o -selection "$CLIPBOARD" > "$INPUT_FILE" || exit 1
+fi
 
 if [[ ! -v NO_TRANS ]]; then
   "$script_path"/reader_"${READER}" "$INPUT_FILE" > "$TMP${FILENAME}_intermediate.txt" &&

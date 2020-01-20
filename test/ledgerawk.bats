@@ -16,6 +16,21 @@ SCRIPT_PATH=src/ledgerawk
   [ "${#lines[@]}" -eq 3 ]
 }
 
+@test "ledgerawk: transactions translated from clipboard" {
+  IFS='' test_input="17/01/2020 	CARD PAYMENT TO SAINSBURYS PETROL,45.43 GBP, RATE 1.00/GBP ON 15-01-2020 		£45.43 	£54,084.23 "
+  echo -e $test_input | xclip -selection clipboard
+
+  run $SCRIPT_PATH -r santander -i $TEST_FILE -c clipboard
+  # xclip process above daemonizes itself as there must be a process holding
+  # the selection if it is to be pasted later. We must kill this process when
+  # we're finished or bats will wait forever for it to terminate.
+  # TODO: Probably a nicer way to grab its process ID than this
+  pkill xclip
+
+  [ "$status" -eq 0 ]
+  [ "${#lines[@]}" -eq 3 ]
+}
+
 @test "ledgerawk: transactions translated with verbose" {
   IFS='' test_input="17/01/2020 	CARD PAYMENT TO SAINSBURYS PETROL,45.43 GBP, RATE 1.00/GBP ON 15-01-2020 		£45.43 	£54,084.23 "
   echo -e $test_input > $TEST_FILE
