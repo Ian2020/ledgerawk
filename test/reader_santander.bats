@@ -1,5 +1,7 @@
 #!/usr/bin/bats
 
+SCRIPT_PATH="$BATS_TEST_DIRNAME/../src/reader_santander"
+
 # Global
 TEST_FILE=test_file.ldg
 
@@ -7,7 +9,7 @@ execute_reader() {
   # Function argument should be the transactions to test
   echo -e "$1" > $TEST_FILE
 
-  run ./src/reader_santander $TEST_FILE
+  run "$SCRIPT_PATH" $TEST_FILE
 
   echo "EXPECTING:"
   echo -e "$2"

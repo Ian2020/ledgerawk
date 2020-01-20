@@ -2,8 +2,7 @@
 
 TEST_FILE=test_file.ldg
 OUTPUT_FILE=test_out
-# There is an assumption here about where the tests are run from
-SCRIPT_PATH=src/ledgerawk
+SCRIPT_PATH="$BATS_TEST_DIRNAME/../src/ledgerawk"
 
 @test "ledgerawk: transactions translated" {
   IFS='' test_input="17/01/2020 	CARD PAYMENT TO SAINSBURYS PETROL,45.43 GBP, RATE 1.00/GBP ON 15-01-2020 		£45.43 	£54,084.23 "

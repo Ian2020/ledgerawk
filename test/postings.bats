@@ -2,6 +2,7 @@
 
 TEST_FILE=test_file.ldg
 SETTINGS_FILE=.ledgerimport
+SCRIPT_PATH="$BATS_TEST_DIRNAME/../src/postings.sh"
 
 function empty_settingsfile() {
   rm -f $SETTINGS_FILE && touch $SETTINGS_FILE
@@ -16,7 +17,7 @@ function execute_postings() {
   # Function argument should be the ledger transactions to test
   echo -e "$1" > $TEST_FILE
 
-  run ./src/postings.sh $TEST_FILE
+  run "$SCRIPT_PATH" $TEST_FILE
   
   echo "EXPECTING:"
   echo -e "$TEST_EXP"
