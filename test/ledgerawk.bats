@@ -71,3 +71,20 @@ SCRIPT_PATH="$BATS_TEST_DIRNAME/../src/ledgerawk"
   [ "${#lines[@]}" -eq 4 ]
   [ "${lines[0]}" = "2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019" ]
 }
+
+@test "ledgerawk: suppress translation, just do postings to an output file which is overwritten" {
+  IFS='' test_input="\
+2019/05/24 * CARD PAYMENT TO IKEA LTD,16.60 GBP, RATE 1.00/GBP ON 22-05-2019
+    ; Let's tag this :IKEA:
+    @@@    -£16.60
+    @@@"
+  echo -e $test_input > $TEST_FILE
+  rm -f $OUTPUT_FILE
+
+  run $SCRIPT_PATH -r santander -i $TEST_FILE -n -o $TEST_FILE
+
+  [ "$status" -eq 0 ]
+  [ "${#lines[@]}" -eq 0 ]
+  [ $(cat $TEST_FILE | wc -l) -eq 4 ]
+  rm -f $TEST_FILE
+}

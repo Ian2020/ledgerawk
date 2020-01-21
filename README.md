@@ -118,8 +118,8 @@ The results will be put back on the clipboard for pasting into your ledger files
 ### Roadmap
 
 * Bug fixing:
+  * Warn when user has specified clipboard and input file
   * Posting does not work against clipboard stuff
-  * Posting only should not append, should overwrite
   * Reader option is not mandatory when not translating
   * Fix usage and instructions, things have changed
 * More into config, less to specify on the cmdline:

@@ -76,8 +76,13 @@ fi
 "$script_path"/postings.sh "$POSTINGS_INPUT" > "${TMP}import_${FILENAME}"
 
 if [[ -v OUTPUT_FILE ]]; then
-  echo >> "$OUTPUT_FILE"
-  cat "${TMP}import_${FILENAME}" >> "$OUTPUT_FILE"
+  # If we're outputting and input file is same as output than overwrite, else append
+  if [[ $(realpath "$INPUT_FILE") = $(realpath "$OUTPUT_FILE") ]]; then
+    cat "${TMP}import_${FILENAME}" > "$OUTPUT_FILE"
+  else
+    echo >> "$OUTPUT_FILE"
+    cat "${TMP}import_${FILENAME}" >> "$OUTPUT_FILE"
+  fi
 else
   cat "${TMP}import_${FILENAME}"
 fi
