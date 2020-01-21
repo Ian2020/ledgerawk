@@ -118,9 +118,10 @@ The results will be put back on the clipboard for pasting into your ledger files
 ### Roadmap
 
 * Bug fixing:
+  * Posting does not work against clipboard stuff
   * Posting only should not append, should overwrite
   * Reader option is not mandatory when not translating
-  * Fix usage instructions
+  * Fix usage and instructions, things have changed
 * More into config, less to specify on the cmdline:
   * In a new config take labels for mappings of reader_type to ledger file:
     `label: reader_type destination_ledger_file`

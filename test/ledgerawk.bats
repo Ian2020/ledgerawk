@@ -50,7 +50,9 @@ SCRIPT_PATH="$BATS_TEST_DIRNAME/../src/ledgerawk"
   rm $TEST_FILE
 
   [ "$status" -eq 0 ]
+  [ "${#lines[@]}" -eq 0 ]
   [ -s $OUTPUT_FILE ]
+  [ $(cat $OUTPUT_FILE | wc -l) -eq 5 ]
   rm -f $OUTPUT_FILE
 }
 

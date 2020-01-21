@@ -76,6 +76,7 @@ fi
 "$script_path"/postings.sh "$POSTINGS_INPUT" > "${TMP}import_${FILENAME}"
 
 if [[ -v OUTPUT_FILE ]]; then
+  echo >> "$OUTPUT_FILE"
   cat "${TMP}import_${FILENAME}" >> "$OUTPUT_FILE"
 else
   cat "${TMP}import_${FILENAME}"
