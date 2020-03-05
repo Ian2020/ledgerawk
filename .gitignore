@@ -1,2 +1,4 @@
 # Ignore makefile's temp files
 .test
+src/__pycache__
+test/__pycache__

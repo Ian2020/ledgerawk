@@ -1,0 +1,13 @@
+#!/bin/env python3
+
+import fileinput
+import sys
+
+
+def go(raw):
+    print(raw)
+
+
+if __name__ == '__main__':
+    with open(sys.argv[1], "r") as f:
+        go(f.read())
