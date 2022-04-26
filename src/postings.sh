@@ -8,11 +8,14 @@ BEGIN {
     SETTINGS_FILE=".ledgerimport"
   } else {
     SETTINGS_FILE=ENVIRON["HOME"] "/.ledgerimport"
-}
+  }
+  if( journal == "" ) {
+    journal = FILENAME
+  }
   while(getline < SETTINGS_FILE) {
     # Allow comments
     if(!match($0,"^#")) {
-      filenames[a]=$1
+      journals[a]=$1
       substitutions[a]=$2
       firstposting[a]=$3
       secondposting[a]=$4
@@ -27,19 +30,19 @@ BEGIN {
   find_second_posting=0
 
   print
-  
+
   # Transaction description - match against substitutions, remember which index matched if so
   for(i in substitutions) {
     # TODO: We'd rather match against field 3 and onwards here, so we do not include
     # the date and transaction status symbol. Is there a way to say $3: to mean
     # concat field 3 and all following fields?
     # Check the substitution is not intended to match a tag, i.e. ':TAG:'
-    if((!match(substitutions[i], "^:.*:$")) && match(FILENAME, filenames[i]) && match($0,substitutions[i])) {
+    if((!match(substitutions[i], "^:.*:$")) && match(journal, journals[i]) && match($0,substitutions[i])) {
       matched=i
       # Remember that we're now looking for @@@ the first
       find_first_posting = 1
       # TODO: break
-    } 
+    }
   }
 }
 /^ *;/ {
@@ -47,12 +50,12 @@ BEGIN {
   # Comment - match against substitutions, remember which index matched if so
   # Check the substitution is intended to match a tag, i.e. ':TAG:'
   for(i in substitutions) {
-    if(match(substitutions[i], "^:.*:$") && match(FILENAME, filenames[i]) && match($0,substitutions[i])) {
+    if(match(substitutions[i], "^:.*:$") && match(journal, journals[i]) && match($0,substitutions[i])) {
       matched=i
       # Remember that we're now looking for @@@ the first
       find_first_posting = 1
       # TODO: break
-    } 
+    }
   }
 }
 /^    @@@/ {
