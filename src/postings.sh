@@ -9,9 +9,6 @@ BEGIN {
   } else {
     SETTINGS_FILE=ENVIRON["HOME"] "/.ledgerimport"
   }
-  if( journal == "" ) {
-    journal = FILENAME
-  }
   while(getline < SETTINGS_FILE) {
     # Allow comments
     if(!match($0,"^#")) {
@@ -23,6 +20,11 @@ BEGIN {
     }
   }
   FS=SAVED_FS
+}
+NR == 1 {
+  if( journal == "" ) {
+    journal = FILENAME
+  }
 }
 /^[[:digit:]]{4}/ {
   #We must rest our state on each new transaction, so previously matched things don't bleed out
