@@ -1,5 +1,14 @@
 # README
 
+This project has been archived as it's become two new projects:
+
+* [ldgclip](https://gitlab.com/IanTwenty/ldgclip) - copy financial transactions
+  from any website to your ledger journals with one click.
+* [ldgmark](https://gitlab.com/IanTwenty/ldgmark) - assign ledger transactions
+  to the right accounts automatically.
+
+Please use these instead.
+
 ## Current Usage
 
 Everything is in src dir in anticipation of building one final script for the whole
